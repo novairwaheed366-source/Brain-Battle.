@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quiz Pro Color</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 25%,#f093fb 50%,#f5576c 75%,#fda085 100%);background-size:400% 400%;animation:grad 15s ease infinite;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:15px}
+@keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.app{width:100%;max-width:440px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.logo{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.95);padding:10px 16px;border-radius:20px;box-shadow:0 8px 32px rgba(0,0.1);backdrop-filter:blur(10px)}
+.logo-icon{width:48px;height:48px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;color:white;box-shadow:0 4px 15px rgba(102,126,234,0.4)}
+h1{font-size:22px;font-weight:900;background:linear-gradient(135deg,#667eea,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.card{background:rgba(255,255,255,0.95);border-radius:28px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15);backdrop-filter:blur(20px);border:1px solid rgba(255,255,0.3)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.stat{background:linear-gradient(135deg,#667eea15,#f5576c15);padding:16px;border-radius:18px;text-align:center;border:2px solid transparent;background-clip:padding-box;position:relative}
+.stat::before{content:'';position:absolute;inset:0;border-radius:18px;padding:2px;background:linear-gradient(135deg,#667eea,#f5576c);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.stat b{font-size:26px;background:linear-gradient(135deg,#667eea,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:block;font-weight:900}
+.stat span{font-size:12px;color:#64748b;font-weight:600}
+.section{font-size:13px;font-weight:800;color:#475569;margin:18px 0 10px;text-transform:uppercase;letter-spacing:0.5px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.cat{padding:14px 8px;background:white;border:2px solid #e2e8f0;border-radius:16px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;transition:all.2s;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+.cat:active{transform:scale(.95)}
+.cat.active{border-color:transparent;background:linear-gradient(135deg,#667eea,#764ba2);color:white;box-shadow:0 8px 20px rgba(102,126,234,0.3);transform:translateY(-2px)}
+.btn{width:100%;padding:16px;margin:8px 0;background:linear-gradient(135deg,#667eea,#764ba2);border:none;border-radius:16px;color:white;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 8px 20px rgba(102,126,234,0.3);transition:.2s}
+.btn:active{transform:translateY(2px);box-shadow:0 4px 10px rgba(102,126,234,0.3)}
+.btn2{background:linear-gradient(135deg,#f093fb,#f5576c);box-shadow:0 8px 20px rgba(245,87,108,0.3)}
+.game-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.qinfo{background:linear-gradient(135deg,#667eea15,#764ba215);padding:8px 14px;border-radius:12px}
+#qnum{font-weight:800;color:#475569;font-size:14px}
+#catname{font-size:11px;color:#764ba2;font-weight:700}
+.timer{width:68px;height:68px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;box-shadow:0 4px 20px rgba(0,0,0.1);border:4px solid #667eea;color:#667eea;position:relative}
+.timer.warn{border-color:#f59e0b;color:#f59e0b;animation:pulse 1s infinite}
+.timer.danger{border-color:#ef4444;color:#ef4444;animation:pulse.5s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.progress{height:6px;background:#e2e8f0;border-radius:3px;margin:12px 0;overflow:hidden}
+.progress div{height:100%;background:linear-gradient(90deg,#667eea,#f093fb,#f5576c);transition:width.3s;border-radius:3px}
+.question{font-size:19px;font-weight:800;line-height:1.5;margin:18px 0;color:#1e293b;min-height:58px}
+.option{padding:16px;margin:10px 0;background:white;border:2.5px solid #e2e8f0;border-radius:16px;cursor:pointer;text-align:center;font-weight:700;font-size:15px;transition:all.2s;box-shadow:0 2px 8px rgba(0,0.04);color:#334155}
+.option:hover{border-color:#667eea;transform:translateY(-2px);box-shadow:0 6px 16px rgba(102,126,234,0.15)}
+.option.correct{background:linear-gradient(135deg,#10b981,#059669);border-color:#10b981;color:white;transform:scale(1.02);box-shadow:0 8px 20px rgba(16,185,129,0.3)}
+.option.wrong{background:linear-gradient(135deg,#ef4444,#dc2626);border-color:#ef4444;color:white;animation:shake.4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.option.disabled{opacity:.6;pointer-events:none}
+.bottom{display:flex;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:2px solid #f1f5f9}
+.bottom span{font-size:14px;color:#64748b;font-weight:600}
+.bottom b{color:#667eea;font-weight:900;font-size:18px}
+.points-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:56px;font-weight:900;background:linear-gradient(135deg,#667eea,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 4px 20px rgba(102,126,234,0.5));animation:pop 1s forwards;pointer-events:none;z-index:999}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-20%) scale(1)}}
+.hidden{display:none}
+.icon{width:44px;height:44px;background:rgba(255,255,0.95);border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;box-shadow:0 4px 15px rgba(0,0.1);backdrop-filter:blur(10px)}
+/* Ê÷⁄ ·Ì·Ì */
+body.dark{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%)}
+body.dark.card{background:rgba(15,23,42,0.95);border-color:rgba(255,255,255,0.1)}
+body.dark.logo{background:rgba(15,23,42,0.9)}
+body.dark.question{color:#f1f5f9}
+body.dark.option{background:#1e293b;border-color:#334155;color:#e2e8f0}
+body.dark.option:hover{border-color:#818cf8}
+body.dark.stat span,body.dark #qnum,body.dark #catname{color:#cbd5e1}
+body.dark.qinfo{background:rgba(30,41,59,0.7)}
+body.dark.timer{background:#0f172a;color:#a5b4fc;border-color:#818cf8}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="logo"><div class="logo-icon">??</div><h1>Quiz Master</h1></div>
+    <div style="display:flex;gap:8px">
+      <div class="icon" onclick="toggleTheme()" id="theme">??</div>
+      <div class="icon" onclick="toggleSound()" id="snd">??</div>
+    </div>
+  </div>
+
+  <div id="home" class="card">
+    <div class="stats">
+      <div class="stat"><b id="last">0</b><span>¬Œ— ·⁄»…</span></div>
+      <div class="stat"><b id="best">0</b><span>√⁄·Ï ”ﬂÊ—</span></div>
+    </div>
+    <div class="section">«Œ — «· ÕœÌ</div>
+    <div class="grid3">
+      <div class="cat active" data-c="all" onclick="selCat(this)">?? «·ﬂ·</div>
+      <div class="cat" data-c="Ã€—«›Ì«" onclick="selCat(this)">?? Ã€—«›Ì«</div>
+      <div class="cat" data-c=" «—ÌŒ" onclick="selCat(this)">??  «—ÌŒ</div>
+      <div class="cat" data-c="ﬂ—… «·ﬁœ„" onclick="selCat(this)">? ﬂÊ—…</div>
+      <div class="cat" data-c="«·ﬁ«œ…" onclick="selCat(this)">?? ﬁ«œ…</div>
+      <div class="cat" data-c="⁄«„…" onclick="selCat(this)">?? ⁄«„…</div>
+      <div class="cat" data-c="√„À«· ‘⁄»Ì…" onclick="selCat(this)">??? √„À«·</div>
+    </div>
+    <button class="btn" onclick="startGame()">?? «»œ√ «·¬‰</button>
+    <button class="btn btn2" onclick="start1v1()">??  ÕœÌ ’œÌﬁ</button>
+  </div>
+
+  <div id="game" class="card hidden">
+    <div class="game-top">
+      <div class="qinfo"><div id="qnum">1/10</div><div id="catname"></div></div>
+      <div class="timer" id="timer">20</div>
+    </div>
+    <div class="progress"><div id="prog" style="width:0%"></div></div>
+    <div class="question" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="bottom">
+      <span>?? <b id="score">0</b></span>
+      <span>?? <b id="streak">0</b></span>
+    </div>
+  </div>
+
+  <div id="end" class="card hidden" style="text-align:center">
+    <div style="font-size:72px;margin:10px 0" id="emoji">??</div>
+    <h2 id="etitle" style="font-size:26px;margin-bottom:8px;background:linear-gradient(135deg,#667eea,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent"></h2>
+    <p id="etext" style="color:#64748b;margin-bottom:24px;font-weight:600"></p>
+    <button class="btn" onclick="location.reload()">?? ·⁄» „—…  «‰Ì…</button>
+  </div>
+</div>
+
+<script>
+const AC=new(window.AudioContext||webkitAudioContext)();let soundOn=true;
+function toggleSound(){soundOn=!soundOn;document.getElementById('snd').textContent=soundOn?'??':'??';if(soundOn)AC.resume()}
+function snd(t){if(!soundOn)return;AC.resume();const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.22,AC.currentTime);
+if(t==='c'){[523,659,784,1046].forEach((f,i)=>setTimeout(()=>{const oo=AC.createOscillator(),gg=AC.createGain();oo.connect(gg);gg.connect(AC.destination);oo.frequency.value=f;gg.gain.setValueAtTime(.18,AC.currentTime);gg.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.12);oo.start();oo.stop(AC.currentTime+.12)},i*70))}
+if(t==='w'){o.frequency.value=160;o.type='sawtooth';g.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.3);o.start();o.stop(AC.currentTime+.3)}
+if(t==='t'){o.frequency.value=1100;g.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.06);o.start();o.stop(AC.currentTime+.06)}
+if(t==='s'){o.frequency.setValueAtTime(300,AC.currentTime);o.frequency.exponentialRampToValueAtTime(900,AC.currentTime+.22);g.gain.exponentialRampToValueAtTime(.01,AC.currentTime+.25);o.start();o.stop(AC.currentTime+.25)}
+}
+function vib(t){if('vibrate' in navigator){if(t==='c')navigator.vibrate([50,30,50]);else if(t==='w')navigator.vibrate(200)}}
+function toggleTheme(){document.body.classList.toggle('dark');const d=document.body.classList.contains('dark');localStorage.setItem('theme',d?'dark':'light');document.getElementById('theme').textContent=d?'??':'??'}
+if(localStorage.getItem('theme')==='dark'){document.body.classList.add('dark');document.getElementById('theme').textContent='??'}
+
+// ===== √”∆·… =====
+const DB={
+"Ã€—«›Ì«":[
+{q:"„« «·œÊ·… «·Õ»Ì”… «· Ì  ÕÌÿ »Â« Ã‰Ê» √›—ÌﬁÌ« »«·ﬂ«„·ø",a:["·Ì”Ê Ê","≈”Ê« Ì‰Ì","»Ê ”Ê«‰«","‰«„Ì»Ì«"],c:0},
+{q:"√⁄„ﬁ ‰ﬁÿ… ›Ì „ÕÌÿ«  «·⁄«·„ø",a:["Œ‰œﬁ „«—Ì«‰«","Œ‰œﬁ  Ê‰€«","Œ‰œﬁ »Ê— Ê—ÌﬂÊ","Œ‰œﬁ «·Ì«»«‰"],c:0},
+{q:"‰Â— Ì„— »›ÌÌ‰« Ê»Êœ«»”  Ê»·€—«œø",a:["«·œ«‰Ê»","«·—«Ì‰","«·”Ì‰","«·›Ê·€«"],c:0},
+{q:"√ﬂ»— Ã“Ì—… »—ﬂ«‰Ì…ø",a:["√Ì”·‰œ«","Â«Ê«Ì","Ã«Ê…","’ﬁ·Ì…"],c:0},
+{q:"œÊ·…  „·ﬂ √ﬂ»— ⁄œœ „‰«ÿﬁ “„‰Ì…ø",a:["›—‰”«","—Ê”Ì«","√„—Ìﬂ«","»—Ìÿ«‰Ì«"],c:0},
+{q:"√⁄·Ï ‘·«· ›Ì «·⁄«·„ø",a:["√‰Ã·","‰Ì«Ã—«","›Ìﬂ Ê—Ì«","≈Ì€Ê«”Ê"],c:0},
+{q:"„÷Ìﬁ Ì—»ÿ «·√”Êœ »„—„—…ø",a:["«·»Ê”›Ê—","«·œ—œ‰Ì·","Â—„“","ÿ«—ﬁ"],c:0},
+{q:"Ã»· ﬂ·Ì„‰Ã«—Ê ›Ìø",a:[" ‰“«‰Ì«","ﬂÌ‰Ì«","√Ê€‰œ«","≈ÀÌÊ»Ì«"],c:0},
+{q:"√ÿÊ· ÕœÊœ »—Ì…ø",a:["ﬂ‰œ«-√„—Ìﬂ«","—Ê”Ì«-ﬂ«“«Œ” «‰","«·√—Ã‰ Ì‰- ‘Ì·Ì","«·’Ì‰-„‰€Ê·Ì«"],c:0},
+{q:"⁄«’„… ﬂ«“«Œ” «‰ø",a:["√” «‰«","√·„« Ì","‘Ì„ﬂ‰ ","√ﬂ «Ê"],c:0}
+],
+" «—ÌŒ":[
+{q:"„⁄—ﬂ… 732 √Êﬁ›  «· Ê”⁄ «·≈”·«„Ì »€—» √Ê—Ê»«ø",a:["»·«ÿ «·‘Âœ«¡","«·“·«ﬁ…","ÕÿÌ‰","Ê«œÌ ·ﬂ…"],c:0},
+{q:"¬Œ— Œ·Ì›… ⁄»«”Ì ﬁ ·Â «·„€Ê·ø",a:["«·„” ⁄’„ »«··Â","«·‰«’—","«·„ﬁ œ—","«·ﬁ«œ—"],c:0},
+{q:"„⁄«Âœ… ›—”«Ì ”‰…ø",a:["1919","1918","1920","1914"],c:0},
+{q:"„ƒ” «·≈„»—«ÿÊ—Ì… «·„€Ê·Ì…ø",a:["Ã‰ﬂÌ“ Œ«‰","ÂÊ·«ﬂÊ"," Ì„Ê—·‰ﬂ","ﬁÊ»·«Ì"],c:0},
+{q:"«·ÀÊ—… «·»·‘›Ì…ø",a:["1917","1905","1922","1914"],c:0},
+{q:"ﬁ«∆œ «·Õ·›«¡ ›Ì «·⁄·„Ì‰ «·À«‰Ì…ø",a:["„Ê‰ €„—Ì","√Ì“‰Â«Ê—","»« Ê‰","—Ê„·"],c:0},
+{q:"”ﬁÊÿ »€œ«œ »Ìœ «·„€Ê·ø",a:["1258","1260","1248","1270"],c:0},
+{q:"’«Õ» '«·„ﬁœ„…'ø",a:["«»‰ Œ·œÊ‰","«»‰ »ÿÊÿ…","«·Ã«ÕŸ","«·„”⁄ÊœÌ"],c:0},
+{q:"Õ—» «·À·«ÀÌ‰ ⁄«„« »œ√ ø",a:["1618","1648","1630","1600"],c:0},
+{q:"√Ê· ≈„»—«ÿÊ— —Ê„«‰Ìø",a:["√€”ÿ”","ÌÊ·ÌÊ” ﬁÌ’—","‰Ì—Ê‰","ﬁ”ÿ‰ÿÌ‰"],c:0}
+],
+"ﬂ—… «·ﬁœ„":[
+{q:"√ﬂÀ— ·«⁄» „‘«—ﬂ… »ﬂ√” «·⁄«·„ø",a:["„Ì”Ì","„« ÌÊ”","ﬂ—Ì” Ì«‰Ê","„«—«œÊ‰«"],c:0},
+{q:"«·√ﬂÀ—   ÊÌÃ« »√»ÿ«· ¬”Ì«ø",a:["«·Â·«·","√Ê—«Ê«","«·« Õ«œ","ÃÊ«‰€ÃÊ"],c:0},
+{q:"Âœ«› «·»—Ì„Ì—·ÌÃ «· «—ÌŒÌø",a:["¬·«‰ ‘Ì——","—Ê‰Ì","ﬂÌ‰","’·«Õ"],c:0},
+{q:"«·ﬂ—… «·–Â»Ì… 2006ø",a:["ﬂ«‰«›«—Ê","“Ìœ«‰","—Ê‰«·œÌ‰ÌÊ","»Ê›Ê‰"],c:0},
+{q:"„‰ Œ» ‘«—ﬂ »ﬂ· ﬂƒÊ” «·⁄«·„ø",a:["«·»—«“Ì·","√·„«‰Ì«","«·√—Ã‰ Ì‰","≈Ìÿ«·Ì«"],c:0},
+{q:"√”—⁄ Âœ› »ﬂ√” «·⁄«·„ø",a:["Â«ﬂ«‰ ‘ÊﬂÊ—","ﬂ·Ê“Â","—Ê‰«·œÊ","»Ì·ÌÂ"],c:0},
+{q:"’«Õ» 'Ìœ «··Â'ø",a:["„«—«œÊ‰«","„Ì”Ì","»« Ì” Ê «","ﬂ«‰ÌÃÌ«"],c:0},
+{q:"√ﬂÀ— „œ—» ›«“ »«·√»ÿ«·ø",a:["√‰‘Ì·Ê Ì","€Ê«—œÌÊ·«","“Ìœ«‰","›Ì—€”Ê‰"],c:0},
+{q:"‰«œÌ Õﬁﬁ «·À·«ÀÌ… „— Ì‰ø",a:["»—‘·Ê‰…","»«Ì—‰","≈‰ —","ÌÊ‰«Ì œ"],c:0},
+{q:"ÂÊ·‰œ« Œ”—  «·‰Â«∆Ì ﬂ„ „—…ø",a:["3","2","1","4"],c:0}
+],
+"«·ﬁ«œ…":[
+{q:"ﬁ«∆œ «·“·«ﬁ… 1086ø",a:["ÌÊ”› »‰  «‘›Ì‰","ÿ«—ﬁ »‰ “Ì«œ","⁄»œ «·—Õ„‰","«·„‰’Ê—"],c:0},
+{q:"„ƒ” «·›«ÿ„ÌÌ‰ø",a:["⁄»Ìœ «··Â «·„ÂœÌ","«·„⁄“","«·Õ«ﬂ„","ÃÊÂ—"],c:0},
+{q:"«”„ ’·«Õ «·œÌ‰ ﬂ«„·ø",a:["ÌÊ”› »‰ √ÌÊ»","’·«Õ »‰ √ÌÊ»","„Õ„œ »‰ √ÌÊ»","√Õ„œ"],c:0},
+{q:"ﬁ«∆œ ‰Â«Ê‰œø",a:["«·‰⁄„«‰ »‰ „ﬁ—‰","”⁄œ","Œ«·œ","«·„À‰Ï"],c:0},
+{q:"„‰ ÊÕœ «·„€Ê·ø",a:["Ã‰ﬂÌ“ Œ«‰","Ì”Êﬂ«Ì"," Ì„ÊÃÌ‰","√Êﬁÿ«Ì"],c:0}
+],
+"⁄«„…":[
+{q:"—„“ «· ‰Ã” ‰ø",a:["W","Tn","Tg","Wt"],c:0},
+{q:"ﬂ« » '«·√Ì«„'ø",a:["ÿÂ Õ”Ì‰","‰ÃÌ» „Õ›ÊŸ","«·ÕﬂÌ„","«·⁄ﬁ«œ"],c:0},
+{q:"”—⁄… «·÷Ê¡ø",a:["300 √·› ﬂ„/À","150 √·›","1 „·ÌÊ‰","30 √·›"],c:0},
+{q:"√ÿÊ· ⁄Ÿ„…ø",a:["«·›Œ–","«·ﬁ’»…","«·⁄÷œ","«·‘ŸÌ…"],c:0},
+{q:"„Œ —⁄ WWWø",a:[" Ì„ »Ì—‰—“ ·Ì","€Ì ”","ÃÊ»“"," Ê—›«·œ”"],c:0},
+{q:"·€… ÃÌ„” ÃÊ”·Ì‰Ãø",a:["Ã«›«","”Ì","»«ÌÀÊ‰","”Ì++"],c:0},
+{q:"⁄œœ ﬂ—Ê„Ê”Ê„«  «·≈‰”«‰ø",a:["46","44","48","23"],c:0},
+{q:"„Œ —⁄ «·Ê—ﬁø",a:["«·’Ì‰","„’—","«·⁄—«ﬁ","«·ÌÊ‰«‰"],c:0},
+{q:"—”«„ '«·’—Œ…'ø",a:["„Ê‰ﬂ","›«‰ ÃÊŒ","»Ìﬂ«”Ê","œ«›‰‘Ì"],c:0},
+{q:"ﬂÊﬂ» ÌœÊ— ⁄ﬂ”Ì«ø",a:["«·“Â—…","√Ê—«‰Ê”","«·„—ÌŒ","⁄ÿ«—œ"],c:0}
+],
+"√„À«· ‘⁄»Ì…":[
+{q:"ﬂ„·: ≈Ìœ ·ÊÕœÂ«...",a:["„«  ”ﬁ›‘","„«  «ﬂ·‘","„«  „‘Ì‘","„«  ‘Ê›‘"],c:0},
+{q:"ﬂ„·: «··Ì «Œ ‘Ê«...",a:["„« Ê«","‰«„Ê«","”«›—Ê«","Â—»Ê«"],c:0},
+{q:"ﬂ„·: «·ﬁ—œ ›Ì ⁄Ì‰ √„Â...",a:["€“«·","√”œ","ﬁ„—","»ÿ·"],c:0},
+{q:"ﬂ„·: Ì« „” ⁄Ã·...",a:["⁄ÿ·ﬂ","Ê’·ﬂ","ﬂ”»ﬂ","—«Õ ﬂ"],c:0},
+{q:"ﬂ„·: «·⁄Ì‰ »’Ì—…...",a:["Ê«·≈Ìœ ﬁ’Ì—…","Ê«·—Ã· ÿÊÌ·…","Ê«·ﬁ·» ﬂ»Ì—","Ê«·⁄ﬁ· ’€Ì—"],c:0},
+{q:"ﬂ„·: „‰ ‘» ⁄·Ï ‘Ì¡...",a:["‘«» ⁄·ÌÂ","„«  ⁄·ÌÂ","‰”ÌÂ"," —ﬂÂ"],c:0},
+{q:"ﬂ„·: œÊ«„ «·Õ«·...",a:["„‰ «·„Õ«·","„‰ «·Ã„«·","„‰ «·Õ·«·","„‰ «·ﬂ„«·"],c:0},
+{q:"ﬂ„·: «··Ì ⁄·Ï —«”Â »ÿÕ…...",a:["ÌÕ” ⁄·ÌÂ«","ÌŒ»ÌÂ«","ÌÊ—ÌÂ«","Ì‰”«Â«"],c:0},
+{q:"ﬂ„·: ⁄·Ï ﬁœ ·Õ«›ﬂ...",a:["„œ —Ã·Ìﬂ","‰«„ »œ—Ì","‘œ «·Õ«›","«ﬁ⁄œ „ﬂ«‰ﬂ"],c:0},
+{q:"ﬂ„·: «·ÿÌÊ— ⁄·Ï...",a:["√‘ﬂ«·Â«  ﬁ⁄","√⁄‘«‘Â«  ‰«„","√·Ê«‰Â«  ÿÌ—","»ÌÊ Â«  —Ã⁄"],c:0},
+{q:"ﬂ„·: Ì« »Œ  „‰...",a:["“«— ÊŒ››","√ﬂ· Ê‘»⁄","‰«„ Ê«— «Õ","„‘Ì Ê« √Œ—"],c:0},
+{q:"ﬂ„·: ≈œÌ «·⁄Ì‘...",a:["·Œ»«“Â","·’«Õ»Â","·Ã«—Â","·⁄Ì«·Â"],c:0},
+{q:"ﬂ„·: «·ﬁ—‘ «·√»Ì÷...",a:["Ì‰›⁄ ›Ì «·ÌÊ„ «·√”Êœ","Ì÷Ì⁄ ›Ì «·”Êﬁ","ÌÃÌ» «·Â„","„« Ì‰›⁄‘"],c:0},
+{q:"ﬂ„·: «·⁄Ã·… „‰...",a:["«·‘Ìÿ«‰","«·—Õ„‰","«·≈‰”«‰","«·ÃÌ—«‰"],c:0},
+{q:"ﬂ„·: «·’»— „› «Õ...",a:["«·›—Ã","«·—“ﬁ","«·Ã‰…","«·”⁄«œ…"],c:0},
+{q:"ﬂ„·: «··Ì ›« ...",a:["„« ","—«Õ","⁄œÏ","«‰ ÂÏ"],c:0},
+{q:"ﬂ„·: ﬂ·  √ŒÌ—…...",a:["Ê›ÌÂ« ŒÌ—…","Ê›ÌÂ« ‰œ«„…","Ê›ÌÂ« ÕÌ—…","Ê›ÌÂ« „’Ì»…"],c:0},
+{q:"ﬂ„·: «»‰ «·Ê“...",a:["⁄Ê«„","ŒÊ«›","‰⁄«„","ﬂ”·«‰"],c:0},
+{q:"ﬂ„·: «·Ã«— ﬁ»·...",a:["«·œ«—","«·»Ì ","«·”ﬂ‰","«·Õ«—…"],c:0},
+{q:"ﬂ„·: «·»«» «··Ì ÌÃÌ·ﬂ „‰Â «·—ÌÕ...",a:["”œÂ Ê«” —ÌÕ","«› ÕÂ","«ﬁ›·Â","”Ì»Â"],c:0}
+]
+};
+
+let cat='all',qs=[],idx=0,score=0,streak=0,time=20,timer,mode='solo',p1='·«⁄»1',p2='·«⁄»2',turn=1,p1s=0,p2s=0;
+let used = JSON.parse(localStorage.getItem('quiz_used')||'[]');
+
+function selCat(el){document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));el.classList.add('active');cat=el.dataset.c}
+function getQs(){let base=cat==='all'?Object.entries(DB).flatMap(([k,v])=>v.map(q=>({...q,cat:k}))):DB[cat].map(q=>({...q,cat}));let pool=base.filter(q=>!used.includes(q.q));if(pool.length<10){used=[];pool=base}pool=pool.sort(()=>Math.random()-.5).slice(0,10);pool.forEach(q=>{if(!used.includes(q.q))used.push(q.q)});localStorage.setItem('quiz_used',JSON.stringify(used));return pool}
+function startGame(){snd('s');mode='solo';qs=getQs();idx=0;score=0;streak=0;document.getElementById('home').classList.add('hidden');document.getElementById('game').classList.remove('hidden');next()}
+function start1v1(){p1=prompt('«”„ «··«⁄» 1ø')||'·«⁄»1';p2=prompt('«”„ «··«⁄» 2ø')||'·«⁄»2';snd('s');mode='1v1';turn=1;p1s=0;p2s=0;qs=getQs();idx=0;score=0;streak=0;document.getElementById('home').classList.add('hidden');document.getElementById('game').classList.remove('hidden');next()}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function next(){if(idx>=qs.length)return end();clearInterval(timer);time=20;updateTimer();timer=setInterval(()=>{time--;updateTimer();if(time<=5&&time>0)snd('t');if(time<=0)answer(-1)},1000);const q=qs[idx];const opts=q.a.map((t,i)=>({t,ok:i===q.c}));shuffle(opts);q.shuffled=opts;q.newC=opts.findIndex(o=>o.ok);document.getElementById('qnum').textContent=mode==='1v1'?`${turn===1?p1:p2} ï ${idx+1}/10`:`${idx+1}/10`;document.getElementById('catname').textContent=q.cat;document.getElementById('qtext').textContent=q.q;document.getElementById('opts').innerHTML=opts.map((o,i)=>`<div class="option" onclick="answer(${i})">${o.t}</div>`).join('');document.getElementById('prog').style.width=`${(idx/qs.length)*100}%`;document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak}
+function updateTimer(){const t=document.getElementById('timer');t.textContent=time;t.className='timer';if(time<=5)t.classList.add('danger');else if(time<=10)t.classList.add('warn')}
+function answer(i){clearInterval(timer);const q=qs[idx],opts=document.querySelectorAll('.option');opts.forEach(o=>o.classList.add('disabled'));opts[q.newC].classList.add('correct');let pts=0;if(i===q.newC){snd('c');vib('c');pts=20+time;score+=pts;streak++;if(mode==='1v1')(turn===1?p1s+=pts:p2s+=pts);showPts(`+${pts}`);opts[i].classList.add('correct')}else{snd('w');vib('w');streak=0;if(i>=0)opts[i].classList.add('wrong')}setTimeout(()=>{idx++;if(mode==='1v1')turn=turn===1?2:1;next()},1200)}
+function showPts(t){const d=document.createElement('div');d.className='points-popup';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1000)}
+function end(){localStorage.setItem('last',score);localStorage.setItem('best',Math.max(score,+(localStorage.getItem('best')||0)));document.getElementById('last').textContent=localStorage.getItem('last');document.getElementById('best').textContent=localStorage.getItem('best');document.getElementById('game').classList.add('hidden');document.getElementById('end').classList.remove('hidden');if(mode==='1v1'){const w=p1s>p2s?p1:p2s>p1s?p2:' ⁄«œ·';document.getElementById('etitle').textContent=w;document.getElementById('etext').textContent=`${p1}: ${p1s} ?? | ${p2}: ${p2s} ??`;document.getElementById('emoji').textContent=w===' ⁄«œ·'?'??':'??'}else{document.getElementById('etitle').textContent=`${score} ‰ﬁÿ…`;document.getElementById('etext').textContent=`√Õ”‰ !`;document.getElementById('emoji').textContent=score>300?'??':score>200?'??':'?'}snd('c');setTimeout(()=>snd('c'),120);setTimeout(()=>snd('c'),240)}
+document.getElementById('last').textContent=localStorage.getItem('last')||0;document.getElementById('best').textContent=localStorage.getItem('best')||0;
+</script>
+</body>
+</html>
+<!-- ‰›” «·ﬂÊœ » «⁄ﬂ »«·ﬂ«„· ›Êﬁ »œÊ‰  €ÌÌ— -->
+<!-- ... (√‰« „Œ ’— Â‰« ⁄·‘«‰ «·œ—œ‘…° ·ﬂ‰ «⁄ »—Â ‰›” ﬂÊœﬂ 100%) ... -->
+
+<!-- ?? “— «·‘«  -->
+<div id="chatBtn" onclick="toggleChat()" 
+style="position:fixed;bottom:20px;left:20px;width:55px;height:55px;
+background:#667eea;color:white;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+font-size:24px;cursor:pointer;box-shadow:0 10px 25px rgba(0,0,0,0.2);z-index:9999">
+??
+</div>
+
+<!-- ?? ‰«›–… «·‘«  -->
+<div id="chatBox" 
+style="position:fixed;bottom:90px;left:20px;width:300px;
+height:400px;background:white;border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+display:none;flex-direction:column;overflow:hidden;z-index:9999">
+
+<div style="background:#667eea;color:white;padding:10px;font-weight:bold">
+AI Chat ??
+</div>
+
+<div id="chatMessages" 
+style="flex:1;padding:10px;overflow-y:auto;font-size:14px"></div>
+
+<div style="display:flex;border-top:1px solid #eee">
+<input id="chatInput" placeholder="«ﬂ » —”«· ﬂ..."
+style="flex:1;padding:10px;border:none;outline:none">
+<button onclick="sendMsg()"
+style="background:#667eea;color:white;border:none;padding:10px 15px;cursor:pointer">
+≈—”«·
+</button>
+</div>
+
+</div>
+
+<script>
+/* =========================
+   ?? AI CHAT (ADDED ONLY)
+========================= */
+
+const API_KEY = "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";
+
+function toggleChat(){
+  const box = document.getElementById("chatBox");
+  box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+function addMsg(text, role){
+  const div = document.createElement("div");
+  div.style.margin = "8px 0";
+  div.style.textAlign = role === "user" ? "right" : "left";
+  div.innerHTML = `
+    <span style="
+      display:inline-block;
+      padding:8px 10px;
+      border-radius:10px;
+      background:${role === "user" ? "#667eea" : "#eee"};
+      color:${role === "user" ? "white" : "black"};
+      max-width:80%;
+    ">${text}</span>
+  `;
+  document.getElementById("chatMessages").appendChild(div);
+}
+
+async function sendMsg(){
+  const input = document.getElementById("chatInput");
+  const msg = input.value.trim();
+  if(!msg) return;
+
+  addMsg(msg, "user");
+  input.value = "";
+
+  addMsg("...", "ai");
+
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          {role:"system", content:"√‰  „”«⁄œ –ﬂÌ œ«Œ· ·⁄»… Quiz."},
+          {role:"user", content: msg}
+        ]
+      })
+    });
+
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content || "⁄«‘ Ì« »ÿ· «‰  ›Ì „”‰ÊÏ „ ﬁœ„ , Ê«’·  ﬁœ„ﬂ ‰ÕÊ «·‰Ã«Õ????";
+
+    const msgs = document.getElementById("chatMessages");
+    msgs.lastChild.remove(); // Õ–› "..."
+
+    addMsg(reply, "ai");
+
+  } catch(e){
+    document.getElementById("chatMessages").lastChild.innerHTML =
+      `<span style="color:red">Õ’· Œÿ√ ›Ì «·« ’«·</span>`;
+  }
+}
+</script>
